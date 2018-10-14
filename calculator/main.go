@@ -6,15 +6,6 @@ import (
 	"strings"
 )
 
-// Calculator ...
-// type Calculator interface {
-// 	Excute()
-// 	Plus()
-// 	Minus()
-// 	Divide()
-// 	Multiple()
-// }
-
 type calculator struct {
 	s1 string
 	s2 string
@@ -22,16 +13,16 @@ type calculator struct {
 
 func main() {
 	cal := &calculator{
-		s1: "3000",
-		s2: "200000",
+		s1: "300000",
+		s2: "2000",
 	}
 
-	result := cal.Excute("plus")
+	result := cal.Excute("minus")
 	fmt.Println(result)
 }
 
 func (c *calculator) Excute(operator string) string {
-	var result []string
+	var result string
 	lenS1 := len(c.s1)
 	lenS2 := len(c.s2)
 	lenLoop := 0
@@ -46,13 +37,17 @@ func (c *calculator) Excute(operator string) string {
 	case "plus":
 		result = plus(c, lenLoop)
 		break
+	case "minus":
+		result = minus(c, lenLoop)
+		break
 	}
 
-	return strings.Join(result, "")
+	return result
 }
 
-func plus(c *calculator, lenLoop int) (result []string) {
+func plus(c *calculator, lenLoop int) string {
 	remember := false
+	var result []string
 
 	arrS1 := strings.Split(c.s1, "")
 	arrS2 := strings.Split(c.s2, "")
@@ -61,11 +56,11 @@ func plus(c *calculator, lenLoop int) (result []string) {
 
 	for i := 0; i < lenLoop; i++ {
 		itemS1, itemS2 := 0, 0
-		if i < lenArr2 {
-			itemS1, _ = strconv.Atoi(arrS2[lenArr2-i-1])
-		}
 		if i < lenArr1 {
-			itemS2, _ = strconv.Atoi(arrS1[lenArr1-i-1])
+			itemS1, _ = strconv.Atoi(arrS1[lenArr1-i-1])
+		}
+		if i < lenArr2 {
+			itemS2, _ = strconv.Atoi(arrS2[lenArr2-i-1])
 		}
 
 		item := itemS1 + itemS2
@@ -80,27 +75,51 @@ func plus(c *calculator, lenLoop int) (result []string) {
 		strItem := []string{strconv.Itoa(item)}
 		result = append(strItem, result...)
 	}
-	return
+	return strings.Join(result, "")
 }
 
-// func minus(c *calculator, lenLoop int) (result []string) {
-// 	remember := false
-// 	arrS1 := strings.Split(c.s1, "")
-// 	arrS2 := strings.Split(c.s2, "")
-// 	lenArr1 := len(arrS1)
-// 	lenArr2 := len(arrS2)
+func minus(c *calculator, lenLoop int) (strR string) {
+	remember := false
+	negative := false
+	var result []string
+	numS1, _ := strconv.Atoi(c.s1)
+	numS2, _ := strconv.Atoi(c.s2)
+	if numS1 < numS2 {
+		negative = true
+		c.s1, c.s2 = c.s2, c.s1
+	}
+	arrS1 := strings.Split(c.s1, "")
+	arrS2 := strings.Split(c.s2, "")
+	lenArr1 := len(arrS1)
+	lenArr2 := len(arrS2)
 
-// 	for i := 0; i < lenLoop; i++ {
-// 		itemS1, itemS2 := 0, 0
-// 		if i < lenArr2 {
-// 			itemS1, _ = strconv.Atoi(arrS2[lenArr2-i-1])
-// 		}
-// 		if i < lenArr1 {
-// 			itemS2, _ = strconv.Atoi(arrS1[lenArr1-i-1])
-// 		}
+	for i := 0; i < lenLoop; i++ {
+		itemS1, itemS2 := 0, 0
+		if i < lenArr1 {
+			itemS1, _ = strconv.Atoi(arrS1[lenArr1-i-1])
+		}
+		if i < lenArr2 {
+			itemS2, _ = strconv.Atoi(arrS2[lenArr2-i-1])
+		}
 
-// 		item := itemS1 - itemS2
-// 	}
+		if remember {
+			itemS2++
+			remember = false
+		}
+		item := itemS1 - itemS2
+		if itemS1 < itemS2 {
+			item = itemS1 + 10 - itemS2
+			remember = true
+		}
 
-// 	return
-// }
+		strItem := []string{strconv.Itoa(item)}
+		result = append(strItem, result...)
+	}
+
+	strR = strings.Join(result, "")
+	if negative {
+		strR = "-" + strR
+	}
+
+	return
+}
