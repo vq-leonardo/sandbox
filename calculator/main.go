@@ -13,8 +13,8 @@ type calculator struct {
 
 func main() {
 	cal := &calculator{
-		s1: "300000",
-		s2: "2000",
+		s1: "30032432423423000",
+		s2: "200043243243232",
 	}
 
 	result := cal.Excute("minus")
@@ -120,6 +120,11 @@ func minus(c *calculator, lenLoop int) (strR string) {
 	if negative {
 		strR = "-" + strR
 	}
+
+	return
+}
+
+func multiple(c *calculator) (strR string) {
 
 	return
 }
